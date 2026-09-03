@@ -1,0 +1,240 @@
+/* 1. CONTENEDOR PRINCIPAL */
+.login-container {
+display: flex;
+min-height: 100vh;
+background-color: var(--mass-blanco);
+font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+overflow-x: hidden;
+margin: 0;
+padding: 0;
+}
+
+/* 2. PANEL IZQUIERDO (Amarillo y Efecto Ola) */
+.left-panel {
+/* Se ajusta ligeramente el ancho para dar espacio visual a la curva */
+width: 50%;
+background-color: var(--mass-amarillo);
+display: flex;
+justify-content: center;
+align-items: center;
+position: relative;
+z-index: 1;
+
+/* AQUÍ ESTÁ LA MAGIA DE LA OLA REFORZADA:
+El 50% vertical garantiza que la curva abarque de forma fluida de arriba hacia abajo */
+border-radius: 0 35% 35% 0 / 0 50% 50% 0;
+
+
+/* Sombra sutil para dar profundidad sobre el panel blanco */
+box-shadow: 15px 0 30px rgba(0, 0, 0, 0.08);
+}
+
+.mass-logo {
+width: 600px;
+max-width: 75vw;
+filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.15));
+transition: transform 0.3s ease;
+}
+
+.mass-logo:hover {
+transform: scale(1.02);
+}
+
+/* 3. PANEL DERECHO (Fondo Blanco) */
+.right-panel {
+/* Compensa el ancho del panel izquierdo */
+width: 55%;
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: var(--mass-blanco);
+padding: 2rem;
+}
+
+/* 4. TARJETA DEL LOGIN (Card estilo Figma) */
+.login-card {
+width: 100%;
+max-width: 420px;
+background-color: #ffffff;
+border-radius: 24px;
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.03);
+padding: 3.5rem 3rem;
+}
+
+.card-content {
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
+}
+
+/* 5. TIPOGRAFÍA E ÍCONOS */
+.icon-box {
+font-size: 3.5rem;
+color: var(--mass-negro);
+margin-bottom: 1.5rem;
+}
+
+.main-title {
+color: var(--mass-negro);
+font-weight: 900;
+font-size: 2.2rem;
+letter-spacing: -0.8px;
+margin-bottom: 0.25rem;
+margin-top: 0;
+}
+
+.subtitle {
+color: #828a92;
+font-size: 0.95rem;
+font-weight: 500;
+margin-bottom: 2.5rem;
+}
+
+/* 6. FORMULARIO E INPUTS */
+.login-form {
+width: 100%;
+text-align: left;
+}
+
+.form-group {
+margin-bottom: 2rem;
+}
+
+.form-label {
+display: block;
+font-weight: 700;
+font-size: 0.85rem;
+margin-bottom: 0.5rem;
+color: var(--mass-negro);
+}
+
+.custom-input {
+width: 100%;
+padding: 1.1rem 1.25rem;
+font-size: 1.1rem;
+font-weight: 600;
+color: var(--mass-negro);
+border: 2px solid #e2e8f0;
+border-radius: 12px;
+transition: all 0.3s ease;
+box-sizing: border-box;
+background-color: #f8fafc;
+}
+
+.custom-input:focus {
+border-color: var(--mass-azul);
+background-color: #ffffff;
+box-shadow: 0 0 0 4px rgba(4, 47, 170, 0.12);
+outline: none;
+}
+
+.custom-input::placeholder {
+font-weight: 400;
+color: #a0aec0;
+font-size: 1rem;
+}
+
+.error-message {
+color: #e53e3e;
+font-size: 0.8rem;
+font-weight: 700;
+margin-top: 0.5rem;
+}
+
+/* 7. BOTÓN PRINCIPAL */
+.btn-submit {
+width: 100%;
+padding: 1.1rem;
+background-color: var(--mass-amarillo);
+color: var(--mass-negro);
+border: none;
+border-radius: 12px;
+font-size: 1.1rem;
+font-weight: 800;
+cursor: pointer;
+transition: all 0.3s ease;
+box-shadow: 0 4px 6px rgba(255, 209, 0, 0.25);
+}
+
+.btn-submit:hover:not(:disabled) {
+background-color: #f0c500;
+transform: translateY(-2px);
+box-shadow: 0 8px 15px rgba(255, 209, 0, 0.35);
+}
+
+.btn-submit:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+box-shadow: none;
+transform: translateY(0);
+}
+
+/* =========================================
+8. DISEÑO RESPONSIVO (Celulares y Tablets)
+========================================= */
+@media (max-width: 991px) {
+.login-container {
+flex-direction: column;
+}
+
+.left-panel {
+width: 100%;
+min-height: 30vh;
+border-radius: 0 0 35% 35% / 0 0 25% 25%;
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+padding: 1rem 0;
+}
+
+.mass-logo {
+width: 400px;
+}
+
+.right-panel {
+width: 100%;
+min-height: 70vh;
+align-items: flex-start;
+padding: 1.5rem 1.5rem;
+}
+
+.login-card {
+padding: 1.5rem 1.5rem;
+box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.icon-box {
+font-size: 3rem;
+margin-bottom: 1rem;
+}
+
+.main-title {
+font-size: 1.3rem;
+}
+
+.subtitle {
+margin-bottom: 1.5rem;
+}
+
+.form-group {
+margin-bottom: 1rem;
+}
+}
+
+/* 9. ANIMACIONES */
+.animate-fade-in {
+animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in-up {
+animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+0% { opacity: 0; transform: scale(0.95); }
+100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+0% { opacity: 0; transform: translateY(40px); }
+100% { opacity: 1; transform: translateY(0); }
+}

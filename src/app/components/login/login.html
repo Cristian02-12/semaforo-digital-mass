@@ -1,1 +1,58 @@
-<p>login works!</p>
+<div class="login-container">
+  
+  <!-- Columna Izquierda (Amarillo con la curva) -->
+  <div class="left-panel">
+    <div class="logo-box animate-fade-in-up">
+      <!-- Asegúrate de tener logo-mass.png en tu carpeta assets -->
+      <img src="assets/logo-mass.png" alt="Logo Tiendas Mass" class="mass-logo">
+    </div>
+  </div>
+
+  <!-- Columna Derecha (Blanco con formulario) -->
+  <div class="right-panel">
+    
+    <div class="login-card animate-fade-in">
+      <div class="card-content">
+        
+        <!-- Ícono de Caja -->
+        <i class="bi bi-box-seam icon-box"></i>
+        
+        <!-- Títulos -->
+        <h2 class="main-title">Semáforo Digital</h2>
+        <p class="subtitle">Gestión de Caducidad y Mermas</p>
+
+        <!-- Formulario Reactivo -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          
+          <div class="form-group">
+            <label for="dniInput" class="form-label">DNI del Colaborador</label>
+            <input 
+              type="text" 
+              id="dniInput"
+              class="custom-input" 
+              placeholder="Ingrese 8 dígitos"
+              formControlName="dni"
+              (input)="onDniInput($event)"
+              maxlength="8"
+              autocomplete="off">
+            
+            <!-- Mensaje de error -->
+            <div *ngIf="loginForm.get('dni')?.invalid && loginForm.get('dni')?.touched" class="error-message">
+              * Ingrese un DNI válido de 8 dígitos.
+            </div>
+          </div>
+
+          <!-- Botón de Envío -->
+          <button 
+            type="submit" 
+            class="btn-submit"
+            [disabled]="loginForm.invalid">
+            Ingresar al Sistema
+          </button>
+
+        </form>
+      </div>
+    </div>
+    
+  </div>
+</div>
