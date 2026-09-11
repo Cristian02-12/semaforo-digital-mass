@@ -1,0 +1,147 @@
+<div class="dashboard-wrapper">
+  
+  <!-- BARRA LATERAL (SIDEBAR) -->
+  <aside class="sidebar" [class.mobile-open]="isMobileMenuOpen">
+    <!-- Cabecera Sidebar -->
+    <div class="sidebar-header">
+      <div class="brand-box">
+        <div class="mass-circle-logo">Mass</div>
+        <div class="brand-text">
+          <h2>Semáforo</h2>
+          <p>Panel Tienda</p>
+        </div>
+      </div>
+      <button class="mobile-toggle-btn" (click)="toggleMobileMenu()">
+        <i class="bi" [ngClass]="isMobileMenuOpen ? 'bi-x-lg' : 'bi-list'"></i>
+      </button>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="sidebar-nav" [class.d-none]="!isMobileMenuOpen && isMobile()">
+      <ul class="nav-list">
+        <li class="nav-item active"><i class="bi bi-exclamation-triangle"></i> Alertas de Hoy</li>
+        <li class="nav-item"><i class="bi bi-upc-scan"></i> Ingreso de Lotes</li>
+      </ul>
+      <div class="admin-section" *ngIf="role === 'admin'">
+        <p class="section-title">Administración</p>
+        <ul class="nav-list">
+          <li class="nav-item"><i class="bi bi-file-earmark-text"></i> Auditoría</li>
+          <li class="nav-item"><i class="bi bi-person-lines-fill"></i> Gestión de Personal</li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer" [class.d-none]="!isMobileMenuOpen && isMobile()">
+      <div class="user-info">
+        <p class="user-name">{{ userName }} {{ role === 'admin' ? 'Admin' : 'Trabajador' }}</p>
+        <p class="user-role">{{ role === 'admin' ? 'Administrador' : 'Operario' }}</p>
+      </div>
+      <button class="btn-logout" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- ÁREA DE CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+    
+    <div class="blur-overlay" *ngIf="selectedAlert" (click)="closeModal()"></div>
+
+    <div class="content-header">
+      <h1>Panel de Operaciones</h1>
+      <p>Revisa las tareas y alertas de vencimiento para el día de hoy.</p>
+    </div>
+
+    <div class="alerts-section">
+      <h3 class="alerts-title">
+        <span class="red-dot"></span> Lotes Críticos ({{ lotesCriticos.length }})
+      </h3>
+      <div class="cards-grid">
+        <div class="alert-card" *ngFor="let lote of lotesCriticos">
+          <span class="badge-date">VENCE: {{ lote.vencimiento }}</span>
+          <h4>{{ lote.producto }}</h4>
+          <p class="sku-text">SKU: {{ lote.sku }}</p>
+          <p class="quantity-text">Buscar: <span class="highlight-qty">{{ lote.cantidad }} unid.</span></p>
+          <button class="btn-atender" (click)="openAlertModal(lote)">Atender Alerta</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL EMERGENTE -->
+    <div class="custom-modal" *ngIf="selectedAlert">
+      <button class="btn-back" (click)="closeModal()">
+        <i class="bi bi-arrow-left"></i> Volver a Alertas
+      </button>
+      <h2>Resolución de Lote Crítico</h2>
+      <p class="modal-subtitle">Por favor, acuda a la góndola y verifique el estado del siguiente producto:</p>
+
+      <div class="modal-info-box">
+        <h3>{{ selectedAlert.producto }}</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">CANTIDAD A BUSCAR</span>
+            <span class="info-value">{{ selectedAlert.cantidad }} unidades</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">FECHA CRÍTICA</span>
+            <span class="info-value text-danger">{{ selectedAlert.vencimiento }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-action btn-promo" (click)="resolveAlert('Promoción')">
+          <i class="bi bi-check-circle"></i> Encontrado y Movido a Promoción (Caja)
+        </button>
+        <button class="btn-action btn-sold" (click)="resolveAlert('Vendido')">
+          <i class="bi bi-x-circle"></i> Stock No Encontrado (Ya se vendió)
+        </button>
+        <button class="btn-action btn-merma" (click)="resolveAlert('Merma')">
+          <i class="bi bi-trash"></i> El producto ya estaba vencido/dañado (Merma)
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- =========================================================================
+     ZONA DE CHATBOT (SOLO ADMIN) - Separado de la grilla principal
+========================================================================== -->
+<!-- Botón Flotante -->
+<button 
+  class="chatbot-btn" 
+  *ngIf="role === 'admin' && !isChatOpen" 
+  [class.d-none]="isMobileMenuOpen && isMobile()"
+  (click)="toggleChat()">
+  <i class="bi bi-chat-dots-fill"></i>
+</button>
+
+<!-- Ventana de Chat (Interfaz preparada para n8n) -->
+<div 
+  class="chat-window" 
+  *ngIf="role === 'admin' && isChatOpen" 
+  [class.d-none]="isMobileMenuOpen && isMobile()">
+  
+  <div class="chat-header">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-robot"></i> Asistente IA (n8n)
+    </div>
+    <button class="btn-close-chat" (click)="toggleChat()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  
+  <div class="chat-messages">
+    <!-- Mensaje Bot -->
+    <div class="message bot-msg">
+      Hola, {{ userName }}. Soy el asistente automatizado de Tiendas Mass. ¿Deseas consultar un SKU o solicitar un reporte de mermas de hoy?
+    </div>
+    <!-- Aquí se inyectarán los mensajes del usuario y del servidor en el futuro -->
+  </div>
+  
+  <div class="chat-input-area">
+    <input type="text" placeholder="Escribe tu consulta..." class="chat-input">
+    <button class="btn-send"><i class="bi bi-send-fill"></i></button>
+  </div>
+</div>
