@@ -1,0 +1,157 @@
+/* CONEXIÓN CON LAS VARIABLES GLOBALES DE STYLES.CSS */
+.bg-mass-blue {
+  background-color: var(--mass-azul) !important;
+  color: var(--mass-blanco) !important;
+}
+
+.text-mass-blue {
+  color: var(--mass-azul) !important;
+}
+
+.ingreso-container {
+  padding: 1rem;
+}
+
+/* TARJETAS DE ACCIÓN */
+.action-card {
+  border-radius: 16px;
+  background-color: var(--mass-blanco);
+  transition: transform 0.2s ease;
+}
+
+/* CAJA DEL ESCÁNER Y ANIMACIÓN */
+.scanner-box {
+  background-color: var(--mass-negro);
+  border-radius: 12px;
+  height: 220px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #e2e8f0;
+}
+
+.scanner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-box.scanning {
+  border-color: var(--mass-amarillo);
+}
+
+.scanner-laser {
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background-color: #ff3333;
+  box-shadow: 0 0 10px #ff3333;
+  top: 10%;
+  animation: scan 2s linear infinite alternate;
+}
+
+@keyframes scan {
+  0% { top: 10%; }
+  100% { top: 90%; }
+}
+
+/* INPUTS MANUALES */
+.custom-input {
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+}
+
+.custom-input:focus {
+  border-color: var(--mass-azul);
+  background-color: var(--mass-blanco);
+  box-shadow: 0 0 0 4px rgba(4, 47, 170, 0.12);
+  outline: none;
+}
+
+/* BOTÓN AMARILLO Y ANIMACIÓN AL CLIC */
+.btn-mass-yellow {
+  background-color: var(--mass-amarillo);
+  color: var(--mass-negro);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(255, 209, 0, 0.25);
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+.btn-mass-yellow:hover {
+  background-color: #f0c500;
+}
+
+/* Animación: se hunde ligeramente al presionarlo */
+.btn-mass-yellow:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 3px rgba(255, 209, 0, 0.25);
+}
+
+/* =========================================================================
+   EFECTO BLUR Y MODAL RESPONSIVO (CORREGIDO)
+========================================================================== */
+.blur-overlay {
+  position: fixed; /* Se fija a toda la ventana del navegador */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 50;
+}
+
+.custom-modal {
+  position: fixed; /* Centrado perfecto sin importar el scroll externo */
+  top: 50%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+  background: var(--mass-blanco);
+  width: 90%;
+  max-width: 500px;
+  max-height: 85vh; /* Habilita el scroll interno en celulares pequeños */
+  overflow-y: auto; /* Scroll funcional si el contenido excede el alto */
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+  z-index: 1050;
+}
+
+.success-banner {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.tracking-wider {
+  letter-spacing: 1px;
+}
+
+.btn-save {
+  color: var(--mass-azul);
+  border-color: var(--mass-azul);
+}
+
+.btn-save:hover:not(:disabled) {
+  background-color: var(--mass-azul);
+  color: var(--mass-blanco);
+}
+
+@media (max-width: 991px) {
+  .custom-modal {
+    top: 57%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    max-width: 400px;
+    max-height: 80vh;
+  }
+}

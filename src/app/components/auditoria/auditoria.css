@@ -1,0 +1,278 @@
+.auditoria-container {
+  padding: 1rem;
+}
+
+/* TARJETA PRINCIPAL */
+.audit-card {
+  background-color: var(--mass-blanco);
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.02);
+  padding: 1.5rem;
+  border: 1px solid rgba(0,0,0,0.05);
+  height: 100%;
+}
+
+/* BARRA DE HERRAMIENTAS */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.25rem;
+  background-color: var(--bg-gray);
+  padding: 0.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.btn-filter {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #6c757d;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+/* CORRECCIÓN: Botones de filtro activos en AZUL */
+.btn-filter.active {
+  background-color: var(--mass-azul) !important;
+  color: var(--mass-blanco) !important;
+  box-shadow: 0 4px 6px rgba(4, 47, 170, 0.2);
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+  background-color: var(--bg-gray);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--mass-azul);
+  background-color: var(--mass-blanco);
+}
+
+/* SISTEMA GRID PARA LA TABLA */
+.audit-header, .audit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr 3fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.audit-header {
+  padding: 0.5rem 1rem 1rem 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.header-cell {
+  font-weight: 800;
+  color: #495057;
+  font-size: 0.85rem;
+}
+
+/* SCROLL INTERNO PARA LOS REGISTROS */
+.audit-body-scroll {
+  max-height: 48vh; /* Controla la altura del scroll en PC */
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+/* Personalización de la barra de scroll */
+.audit-body-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.audit-body-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.audit-body-scroll::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+.audit-row {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color); /* Línea sutil de separación */
+  transition: background-color 0.2s;
+}
+
+.audit-row:hover {
+  background-color: var(--bg-gray);
+}
+
+.audit-row:last-child {
+  border-bottom: none;
+}
+
+.date-text {
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.action-text {
+  font-size: 0.9rem;
+}
+
+/* ETIQUETAS BADGE (Ingreso/Salida) */
+.badge-tipo {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.badge-ingreso {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+.badge-salida {
+  background-color: #fce8e6;
+  color: #c5221f;
+}
+
+/* PAGINACIÓN */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.btn-page {
+  background: var(--mass-blanco);
+  border: 1px solid var(--border-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  color: #495057;
+  transition: all 0.2s;
+}
+
+.btn-page:hover:not(:disabled) {
+  background-color: var(--bg-gray);
+}
+
+/* CORRECCIÓN: Botón de paginación activo en AZUL */
+.btn-page.active {
+  background-color: var(--mass-azul) !important;
+  color: var(--mass-blanco) !important;
+  border-color: var(--mass-azul) !important;
+  box-shadow: 0 4px 6px rgba(4, 47, 170, 0.2);
+}
+
+.btn-page:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================================
+   DISEÑO RESPONSIVO (MÓVILES)
+========================================================================== */
+@media (max-width: 768px) {
+  .auditoria-container {
+    padding: 0rem;
+  }
+  
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch; /* Estira los elementos al 100% */
+  }
+  
+  /* Arreglo: Botones de filtro se adaptan sin salirse */
+  .filter-group {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .btn-filter {
+    flex: 1; /* Crecen equitativamente */
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  /* El scroll en móviles es un poco más largo */
+  .audit-body-scroll {
+    max-height: 55vh; 
+  }
+
+  /* Formato de tarjeta para cada registro */
+  .audit-row {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    padding: 1.2rem;
+  }
+
+  .mobile-col {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .mobile-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #adb5bd;
+    min-width: 85px;
+  }
+
+  .audit-cell.text-md-center {
+    text-align: left !important;
+  }
+  
+  /* CORRECCIÓN: Separación del Chatbot */
+  .pagination-container {
+    margin-bottom: 60px; /* Crea un espacio vacío abajo para que no choque con el botón flotante */
+  }
+}

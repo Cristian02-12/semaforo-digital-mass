@@ -19,14 +19,23 @@
     <!-- Navegación -->
     <nav class="sidebar-nav" [class.d-none]="!isMobileMenuOpen && isMobile()">
       <ul class="nav-list">
-        <li class="nav-item active"><i class="bi bi-exclamation-triangle"></i> Alertas de Hoy</li>
-        <li class="nav-item"><i class="bi bi-upc-scan"></i> Ingreso de Lotes</li>
+        <!-- MODIFICACIÓN AQUÍ: changeView y clase activa dinámica -->
+        <li class="nav-item" [class.active]="currentView === 'alertas'" (click)="changeView('alertas')">
+          <i class="bi bi-exclamation-triangle"></i> Alertas de Hoy
+        </li>
+        <li class="nav-item" [class.active]="currentView === 'ingreso'" (click)="changeView('ingreso')">
+          <i class="bi bi-upc-scan"></i> Ingreso de Lotes
+        </li>
       </ul>
       <div class="admin-section" *ngIf="role === 'admin'">
         <p class="section-title">Administración</p>
         <ul class="nav-list">
-          <li class="nav-item"><i class="bi bi-file-earmark-text"></i> Auditoría</li>
-          <li class="nav-item"><i class="bi bi-person-lines-fill"></i> Gestión de Personal</li>
+          <li class="nav-item" [class.active]="currentView === 'auditoria'" (click)="changeView('auditoria')">
+            <i class="bi bi-file-earmark-text"></i> Auditoría
+          </li>
+          <li class="nav-item">
+            <i class="bi bi-person-lines-fill"></i> Gestión de Personal
+          </li>
         </ul>
       </div>
     </nav>
@@ -46,27 +55,29 @@
   <!-- ÁREA DE CONTENIDO PRINCIPAL -->
   <main class="main-content">
     
-    <div class="blur-overlay" *ngIf="selectedAlert" (click)="closeModal()"></div>
+    <!-- VISTA 1: ALERTAS DE HOY -->
+    <div *ngIf="currentView === 'alertas'">
+      <div class="blur-overlay" *ngIf="selectedAlert" (click)="closeModal()"></div>
 
-    <div class="content-header">
-      <h1>Panel de Operaciones</h1>
-      <p>Revisa las tareas y alertas de vencimiento para el día de hoy.</p>
-    </div>
+      <div class="content-header">
+        <h1>Panel de Operaciones</h1>
+        <p>Revisa las tareas y alertas de vencimiento para el día de hoy.</p>
+      </div>
 
-    <div class="alerts-section">
-      <h3 class="alerts-title">
-        <span class="red-dot"></span> Lotes Críticos ({{ lotesCriticos.length }})
-      </h3>
-      <div class="cards-grid">
-        <div class="alert-card" *ngFor="let lote of lotesCriticos">
-          <span class="badge-date">VENCE: {{ lote.vencimiento }}</span>
-          <h4>{{ lote.producto }}</h4>
-          <p class="sku-text">SKU: {{ lote.sku }}</p>
-          <p class="quantity-text">Buscar: <span class="highlight-qty">{{ lote.cantidad }} unid.</span></p>
-          <button class="btn-atender" (click)="openAlertModal(lote)">Atender Alerta</button>
+      <div class="alerts-section">
+        <h3 class="alerts-title">
+          <span class="red-dot"></span> Lotes Críticos ({{ lotesCriticos.length }})
+        </h3>
+        <div class="cards-grid">
+          <div class="alert-card" *ngFor="let lote of lotesCriticos">
+            <span class="badge-date">VENCE: {{ lote.vencimiento }}</span>
+            <h4>{{ lote.producto }}</h4>
+            <p class="sku-text">SKU: {{ lote.sku }}</p>
+            <p class="quantity-text">Buscar: <span class="highlight-qty">{{ lote.cantidad }} unid.</span></p>
+            <button class="btn-atender" (click)="openAlertModal(lote)">Atender Alerta</button>
+          </div>
         </div>
       </div>
-    </div>
 
     <!-- MODAL EMERGENTE -->
     <div class="custom-modal" *ngIf="selectedAlert">
@@ -91,16 +102,27 @@
       </div>
 
       <div class="modal-actions">
-        <button class="btn-action btn-promo" (click)="resolveAlert('Promoción')">
-          <i class="bi bi-check-circle"></i> Encontrado y Movido a Promoción (Caja)
-        </button>
-        <button class="btn-action btn-sold" (click)="resolveAlert('Vendido')">
-          <i class="bi bi-x-circle"></i> Stock No Encontrado (Ya se vendió)
-        </button>
-        <button class="btn-action btn-merma" (click)="resolveAlert('Merma')">
-          <i class="bi bi-trash"></i> El producto ya estaba vencido/dañado (Merma)
-        </button>
+          <button class="btn-action btn-promo" (click)="resolveAlert('Promoción')">
+            <i class="bi bi-check-circle"></i> Encontrado y Movido a Promoción (Caja)
+          </button>
+          <button class="btn-action btn-sold" (click)="resolveAlert('Vendido')">
+            <i class="bi bi-x-circle"></i> Stock No Encontrado (Ya se vendió)
+          </button>
+          <button class="btn-action btn-merma" (click)="resolveAlert('Merma')">
+            <i class="bi bi-trash"></i> El producto ya estaba vencido/dañado (Merma)
+          </button>
+        </div>
       </div>
+    </div>
+
+    <!-- VISTA 2: INGRESO DE LOTES -->
+    <div *ngIf="currentView === 'ingreso'">
+      <app-ingreso-lotes></app-ingreso-lotes>
+    </div>
+
+    <!-- VISTA 3: AUDITORIA (En construcción) -->
+    <div *ngIf="currentView === 'auditoria'">
+      <app-auditoria></app-auditoria>
     </div>
   </main>
 </div>

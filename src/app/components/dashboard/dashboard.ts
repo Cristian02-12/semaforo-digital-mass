@@ -1,11 +1,13 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { IngresoLotes } from '../ingreso-lotes/ingreso-lotes';
+import { Auditoria } from '../auditoria/auditoria';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IngresoLotes, Auditoria],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -16,6 +18,8 @@ export class Dashboard implements OnInit {
   isMobileMenuOpen: boolean = false;
   isChatOpen: boolean = false;
   selectedAlert: any = null;
+
+  currentView: 'alertas' | 'ingreso' | 'auditoria' = 'alertas';
   
   screenWidth: number = typeof window !== 'undefined' ? window.innerWidth : 1200; 
 
@@ -43,6 +47,13 @@ export class Dashboard implements OnInit {
     }
   }
 
+  changeView(view: 'alertas' | 'ingreso' | 'auditoria'): void {
+    this.currentView = view;
+    if (this.isMobile()) {
+      this.isMobileMenuOpen = false; // Cierra el menú en móvil tras hacer clic
+    }
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.screenWidth = window.innerWidth;
@@ -57,7 +68,6 @@ export class Dashboard implements OnInit {
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    // Ocultar el chat automáticamente si se abre el menú hamburguesa en celulares
     if (this.isMobileMenuOpen) {
       this.isChatOpen = false;
     }

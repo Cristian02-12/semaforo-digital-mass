@@ -1,1 +1,113 @@
-<p>ingreso-lotes works!</p>
+<div class="ingreso-container position-relative h-100">
+  
+  <!-- Encabezado -->
+  <div class="content-header mb-4">
+    <h1 class="fw-bold text-dark">Ingreso de Nuevo Lote</h1>
+    <p class="text-muted">Registre los productos perecibles que acaban de llegar para su trazabilidad.</p>
+  </div>
+
+  <!-- Tarjetas Principales -->
+  <div class="row g-4">
+    
+    <!-- TARJETA 1: ESCÁNER DE CÁMARA -->
+    <div class="col-12 col-lg-6">
+      <div class="card action-card h-100 border-0 shadow-sm overflow-hidden">
+        <div class="card-header bg-mass-blue text-center py-3">
+          <h4 class="m-0 fw-bold"><i class="bi bi-camera me-2"></i> Usar Escáner de Cámara</h4>
+        </div>
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+          
+          <div class="scanner-box w-100 mb-4" [class.scanning]="isScanning">
+            <video #videoElement autoplay playsinline class="scanner-video" [hidden]="!isScanning"></video>
+            <div class="scanner-placeholder" *ngIf="!isScanning">
+              <i class="bi bi-qr-code-scan text-muted" style="font-size: 3rem;"></i>
+              <p class="mt-2 mb-0 text-muted small">La cámara se activará aquí</p>
+            </div>
+            <div class="scanner-laser" *ngIf="isScanning"></div>
+          </div>
+          
+          <p class="text-danger small fw-bold text-center" *ngIf="cameraError">{{ cameraError }}</p>
+
+          <button class="btn btn-mass-yellow w-100 fw-bold py-2 fs-5" 
+                  (click)="isScanning ? stopCamera() : startScanner()">
+            {{ isScanning ? 'Detener Cámara' : 'Escanear' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARJETA 2: DIGITACIÓN MANUAL -->
+    <div class="col-12 col-lg-6">
+      <div class="card action-card h-100 border-0 shadow-sm overflow-hidden">
+        <!-- Fondo Azul Aplicado -->
+        <div class="card-header bg-mass-blue text-center py-3">
+          <h4 class="m-0 fw-bold"><i class="bi bi-keyboard me-2"></i> Digitación Manual</h4>
+        </div>
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+          
+          <form [formGroup]="loteForm" class="w-100 mb-4" (ngSubmit)="searchManual()">
+            <label class="form-label fw-bold small text-dark">Código de Barras / SKU del Producto</label>
+            <input type="text" 
+                   class="form-control custom-input py-3" 
+                   placeholder="Ej. 7751271036290" 
+                   formControlName="skuManual">
+          </form>
+
+          <button class="btn btn-mass-yellow w-100 fw-bold py-2 fs-5 mt-auto" (click)="searchManual()">
+            Buscar Producto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPA DE DESENFOQUE (BLUR) Y MODAL DE CONFIRMACIÓN -->
+  <div class="blur-overlay" *ngIf="showModal" (click)="closeModal()"></div>
+
+  <!-- MODAL DE CONFIRMACIÓN (Centrado y con Scroll) -->
+  <div class="custom-modal" *ngIf="showModal">
+    
+    <!-- Banner de Éxito -->
+    <div class="success-banner d-flex align-items-center mb-3">
+      <i class="bi bi-check-circle fs-4 text-success me-3"></i>
+      <div>
+        <h6 class="m-0 fw-bold text-success">Producto Identificado Exitosamente</h6>
+        <small class="text-success-emphasis" style="font-size: 0.75rem;">El sistema cruzó el código con el maestro.</small>
+      </div>
+    </div>
+
+    <!-- Información del Producto -->
+    <div class="mb-4">
+      <p class="text-muted small fw-bold mb-1 tracking-wider" style="font-size: 0.7rem;">CATÁLOGO MAESTRO</p>
+      <h3 class="fw-bold text-mass-blue mb-1">{{ productoActual?.nombre }}</h3>
+      <p class="text-muted small mb-0">CÓD: {{ productoActual?.sku }}</p>
+    </div>
+
+    <!-- Formulario de Ingreso Responsivo (Apilado en móviles) -->
+    <form [formGroup]="loteForm" (ngSubmit)="saveLote()">
+      <div class="row g-3 mb-4">
+        <!-- col-12 en móviles, col-md-6 en PC -->
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-bold" style="font-size: 0.75rem;">UNIDADES FÍSICAS (TOTAL)</label>
+          <input type="number" class="form-control custom-input" placeholder="Ej. 24" formControlName="unidades">
+        </div>
+        <!-- col-12 en móviles, col-md-6 en PC -->
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-bold" style="font-size: 0.75rem;">FECHA DE VENCIMIENTO IMPRESA</label>
+          <input type="date" class="form-control custom-input" formControlName="fechaVencimiento">
+        </div>
+      </div>
+
+      <!-- Botones de Acción (Apilados en móviles, lado a lado en PC) -->
+      <div class="d-flex flex-column flex-md-row gap-3">
+        <button type="button" class="btn btn-light text-danger border-danger fw-bold w-100 py-2" (click)="closeModal()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-outline-primary fw-bold w-100 py-2 btn-save" [disabled]="loteForm.get('unidades')?.invalid || loteForm.get('fechaVencimiento')?.invalid">
+          Guardar Lote
+        </button>
+      </div>
+    </form>
+    
+  </div>
+</div>

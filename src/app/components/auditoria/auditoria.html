@@ -1,1 +1,93 @@
-<p>auditoria works!</p>
+<div class="auditoria-container position-relative h-100 animate-fade-in">
+  
+  <!-- Encabezado -->
+  <div class="content-header mb-4">
+    <h1 class="fw-bold text-dark">Auditoría del Sistema</h1>
+    <p class="text-muted">Registro histórico de ingresos de lotes y resoluciones de mermas.</p>
+  </div>
+
+  <!-- Contenedor Principal (Tarjeta Blanca) -->
+  <div class="audit-card d-flex flex-column">
+    
+    <!-- Barra de Herramientas (Filtros y Buscador) -->
+    <div class="toolbar">
+      <!-- Botones de Filtro -->
+      <div class="filter-group">
+        <button class="btn-filter" [class.active]="currentFilter === 'TODOS'" (click)="setFilter('TODOS')">Todos</button>
+        <button class="btn-filter" [class.active]="currentFilter === 'INGRESO'" (click)="setFilter('INGRESO')">Ingresos</button>
+        <button class="btn-filter" [class.active]="currentFilter === 'SALIDA'" (click)="setFilter('SALIDA')">Salidas</button>
+      </div>
+
+      <!-- Buscador -->
+      <div class="search-box">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Buscar por usuario, acción o fecha..." (input)="onSearch($event)">
+      </div>
+    </div>
+
+    <!-- Cabecera de la Tabla (Solo visible en PC) -->
+    <div class="audit-header d-none d-md-grid">
+      <div class="header-cell">Fecha / Hora</div>
+      <div class="header-cell text-center">Tipo</div>
+      <div class="header-cell">Usuario</div>
+      <div class="header-cell">Acción Realizada</div>
+    </div>
+
+    <!-- CONTENEDOR CON SCROLL PROPIO -->
+    <div class="audit-body-scroll">
+      
+      <!-- Mensaje si no hay resultados -->
+      <div class="no-data text-center py-5" *ngIf="paginatedLogs.length === 0">
+        <i class="bi bi-inbox fs-1 text-muted mb-3 d-block"></i>
+        <h5 class="text-muted">No se encontraron registros.</h5>
+      </div>
+
+      <!-- Filas de registros -->
+      <div class="audit-row" *ngFor="let log of paginatedLogs">
+        <!-- Col 1: Fecha -->
+        <div class="audit-cell mobile-col">
+          <span class="mobile-label d-md-none">Fecha/Hora:</span>
+          <span class="date-text fw-semibold">{{ log.fechaHora.split(' ')[0] }} <br class="d-none d-md-block"> <small class="text-muted">{{ log.fechaHora.split(' ')[1] }}</small></span>
+        </div>
+        
+        <!-- Col 2: Tipo (Badge) -->
+        <div class="audit-cell text-md-center mobile-col">
+          <span class="mobile-label d-md-none">Tipo:</span>
+          <span class="badge-tipo" [ngClass]="log.tipo === 'INGRESO' ? 'badge-ingreso' : 'badge-salida'">
+            {{ log.tipo }}
+          </span>
+        </div>
+        
+        <!-- Col 3: Usuario -->
+        <div class="audit-cell fw-bold text-dark mobile-col">
+          <span class="mobile-label d-md-none">Usuario:</span>
+          {{ log.usuario }}
+        </div>
+        
+        <!-- Col 4: Acción -->
+        <div class="audit-cell text-muted mobile-col action-text">
+          <span class="mobile-label d-md-none">Acción:</span>
+          {{ log.accion }}
+        </div>
+      </div>
+    </div> <!-- Fin de contenedor con scroll -->
+
+    <!-- Paginación -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      
+      <button class="btn-page" *ngFor="let page of pagesArray" 
+              [class.active]="currentPage === page" 
+              (click)="changePage(page)">
+        {{ page }}
+      </button>
+
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+  </div>
+</div>
