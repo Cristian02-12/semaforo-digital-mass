@@ -1,1 +1,62 @@
-<p>alertas works!</p>
+<div class="alertas-container position-relative h-100 animate-fade-in">
+  
+  <!-- Capa de Desenfoque Fija -->
+  <div class="blur-overlay" *ngIf="selectedAlert" (click)="closeModal()"></div>
+
+  <!-- Encabezado -->
+  <div class="content-header">
+    <h1 class="fw-bold text-dark m-0">Panel de Operaciones</h1>
+    <p class="text-muted mb-4">Revisa las tareas y alertas de vencimiento para el día de hoy.</p>
+  </div>
+
+  <!-- Sección de Tarjetas -->
+  <div class="alerts-section">
+    <h3 class="alerts-title">
+      <span class="red-dot"></span> Lotes Críticos ({{ lotesCriticos.length }})
+    </h3>
+    <div class="cards-grid">
+      <div class="alert-card" *ngFor="let lote of lotesCriticos">
+        <span class="badge-date">VENCE: {{ lote.vencimiento }}</span>
+        <h4>{{ lote.producto }}</h4>
+        <p class="sku-text">SKU: {{ lote.sku }}</p>
+        <p class="quantity-text">Buscar: <span class="highlight-qty">{{ lote.cantidad }} unid.</span></p>
+        <button class="btn-atender" (click)="openAlertModal(lote)">Atender Alerta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EMERGENTE -->
+  <div class="custom-modal" *ngIf="selectedAlert">
+    <button class="btn-back" (click)="closeModal()">
+      <i class="bi bi-arrow-left"></i> Volver a Alertas
+    </button>
+    <h2 class="fw-bold">Resolución de Lote Crítico</h2>
+    <p class="modal-subtitle">Por favor, acuda a la góndola y verifique el estado del siguiente producto:</p>
+
+    <div class="modal-info-box">
+      <h3>{{ selectedAlert.producto }}</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">CANTIDAD A BUSCAR</span>
+          <span class="info-value">{{ selectedAlert.cantidad }} unidades</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">FECHA CRÍTICA</span>
+          <span class="info-value text-danger">{{ selectedAlert.vencimiento }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-action btn-promo" (click)="resolveAlert('Promoción')">
+        <i class="bi bi-check-circle"></i> Encontrado y Movido a Promoción (Caja)
+      </button>
+      <button class="btn-action btn-sold" (click)="resolveAlert('Vendido')">
+        <i class="bi bi-x-circle"></i> Stock No Encontrado (Ya se vendió)
+      </button>
+      <button class="btn-action btn-merma" (click)="resolveAlert('Merma')">
+        <i class="bi bi-trash"></i> El producto ya estaba vencido/dañado (Merma)
+      </button>
+    </div>
+  </div>
+</div>

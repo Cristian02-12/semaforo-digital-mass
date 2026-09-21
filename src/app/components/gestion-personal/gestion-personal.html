@@ -1,1 +1,105 @@
-<p>gestion-personal works!</p>
+<div class="personal-container position-relative h-100 animate-fade-in">
+  
+  <!-- Encabezado con Botón responsivo -->
+  <div class="content-header d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div class="header-text">
+      <h1 class="fw-bold text-dark m-0">Gestión de Personal</h1>
+      <p class="text-muted mb-0">Administra los accesos y roles de los colaboradores.</p>
+    </div>
+    <button class="btn-mass-yellow fw-bold px-4 py-2" (click)="openModal()">
+      <i class="bi bi-person-plus-fill me-2"></i> Nuevo Colaborador
+    </button>
+  </div>
+
+  <!-- Grid de Tarjetas de Usuarios -->
+  <div class="users-grid">
+    <div class="user-card" *ngFor="let colab of colaboradores">
+      
+      <span class="badge-principal" *ngIf="colab.isPrincipal">Principal</span>
+
+      <div class="user-info-section">
+        <div class="avatar-circle">{{ getInicial(colab.nombres) }}</div>
+        <div class="user-details">
+          <h5 class="fw-bold m-0 text-truncate">{{ colab.nombres }} {{ colab.apellidos }}</h5>
+          <p class="text-muted small m-0">DNI: {{ colab.dni }}</p>
+        </div>
+      </div>
+
+      <hr class="card-divider">
+
+      <div class="user-actions">
+        <select class="role-select" [value]="colab.rol" (change)="changeRole(colab, $event)" [disabled]="colab.isPrincipal">
+          <option value="Administrador">Administrador</option>
+          <option value="Trabajador">Trabajador</option>
+        </select>
+        
+        <button class="btn-delete" *ngIf="!colab.isPrincipal" (click)="deleteColaborador(colab.id)" title="Eliminar Colaborador">
+          <i class="bi bi-trash3"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPA DE DESENFOQUE (Blur Fijo) -->
+  <div class="blur-overlay" *ngIf="showModal" (click)="closeModal()"></div>
+
+  <!-- MODAL CENTRADO PERFECTAMENTE -->
+  <div class="custom-modal" *ngIf="showModal">
+    <h4 class="fw-bold text-mass-blue mb-4 text-center text-md-start">Ingresar Nuevo Colaborador</h4>
+
+    <form [formGroup]="personalForm" (ngSubmit)="saveColaborador()">
+      <div class="row g-3 mb-4">
+        
+        <!-- Nombres -->
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-bold small">Nombres:</label>
+          <!-- (input) bloquea números al instante -->
+          <input type="text" class="form-control custom-input" formControlName="nombres" (input)="onTextInput($event, 'nombres')" autocomplete="off">
+          <div class="error-msg" *ngIf="personalForm.get('nombres')?.invalid && personalForm.get('nombres')?.touched">
+            <i class="bi bi-exclamation-circle me-1"></i> Requerido. Solo letras.
+          </div>
+        </div>
+
+        <!-- Apellidos -->
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-bold small">Apellidos:</label>
+          <input type="text" class="form-control custom-input" formControlName="apellidos" (input)="onTextInput($event, 'apellidos')" autocomplete="off">
+          <div class="error-msg" *ngIf="personalForm.get('apellidos')?.invalid && personalForm.get('apellidos')?.touched">
+            <i class="bi bi-exclamation-circle me-1"></i> Requerido. Solo letras.
+          </div>
+        </div>
+
+        <!-- DNI -->
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-bold small">DNI:</label>
+          <!-- (input) bloquea letras, maxlength limita a 8 -->
+          <input type="text" class="form-control custom-input" formControlName="dni" maxlength="8" (input)="onNumberInput($event, 'dni')" autocomplete="off">
+          <div class="error-msg" *ngIf="personalForm.get('dni')?.invalid && personalForm.get('dni')?.touched">
+            <i class="bi bi-exclamation-circle me-1"></i> Debe tener 8 números.
+          </div>
+        </div>
+
+        <!-- Rol -->
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-bold small">Rol:</label>
+          <select class="form-select custom-input" formControlName="rol">
+            <option value="Administrador">Administrador</option>
+            <option value="Trabajador">Trabajador</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="d-flex flex-column flex-md-row gap-3 mt-2">
+        <button type="button" class="btn btn-cancelar fw-bold w-100 py-2" (click)="closeModal()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-guardar fw-bold w-100 py-2" [disabled]="personalForm.invalid">
+          Guardar Colaborador
+        </button>
+      </div>
+    </form>
+    
+  </div>
+</div>

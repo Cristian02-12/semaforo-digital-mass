@@ -1,13 +1,17 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+
+// Importación de todos tus sub-componentes modulares
+import { Alertas } from '../alertas/alertas';
 import { IngresoLotes } from '../ingreso-lotes/ingreso-lotes';
 import { Auditoria } from '../auditoria/auditoria';
+import { GestionPersonal } from '../gestion-personal/gestion-personal';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, IngresoLotes, Auditoria],
+  imports: [CommonModule, Alertas, IngresoLotes, Auditoria, GestionPersonal],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -17,17 +21,11 @@ export class Dashboard implements OnInit {
   
   isMobileMenuOpen: boolean = false;
   isChatOpen: boolean = false;
-  selectedAlert: any = null;
-
-  currentView: 'alertas' | 'ingreso' | 'auditoria' = 'alertas';
+  
+  // Controlador de las vistas
+  currentView: 'alertas' | 'ingreso' | 'auditoria' | 'personal' = 'alertas';
   
   screenWidth: number = typeof window !== 'undefined' ? window.innerWidth : 1200; 
-
-  lotesCriticos = [
-    { id: 1, producto: 'Yogur Fresa Gloria 1L', sku: '7751271036290', cantidad: 5, vencimiento: '25/08/2026' },
-    { id: 2, producto: 'Pan de Molde Bimbo', sku: '7750106182607', cantidad: 3, vencimiento: '23/08/2026' },
-    { id: 3, producto: 'Gaseosa Inca Kola de 1.5 L', sku: '7751271036290', cantidad: 8, vencimiento: '29/08/2026' }
-  ];
 
   constructor(private router: Router) {}
 
@@ -42,12 +40,13 @@ export class Dashboard implements OnInit {
         this.role = 'worker';
         this.userName = 'Juan';
       } else {
+        // Redirige al login si no hay sesión
         this.router.navigate(['/login']);
       }
     }
   }
 
-  changeView(view: 'alertas' | 'ingreso' | 'auditoria'): void {
+  changeView(view: 'alertas' | 'ingreso' | 'auditoria' | 'personal'): void {
     this.currentView = view;
     if (this.isMobile()) {
       this.isMobileMenuOpen = false; // Cierra el menú en móvil tras hacer clic
@@ -75,22 +74,6 @@ export class Dashboard implements OnInit {
 
   toggleChat(): void {
     this.isChatOpen = !this.isChatOpen;
-  }
-
-  openAlertModal(lote: any): void {
-    this.selectedAlert = lote;
-  }
-
-  closeModal(): void {
-    this.selectedAlert = null;
-  }
-
-  resolveAlert(action: string): void {
-    const isConfirmed = confirm(`¿Estás seguro de registrar esta acción: ${action}?`);
-    if (isConfirmed) {
-      alert('Acción registrada con éxito. El lote ha sido gestionado.');
-      this.closeModal();
-    }
   }
 
   logout(): void {
